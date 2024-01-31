@@ -9,8 +9,6 @@ const inpYear = document.getElementById('year');
 
 
 addBook.onclick = function () {
-    //TODO Homework Collect data from inputs,
-    // create new book and add new book to library if this book unique
     if (findBook(library, inpIsbn.value) === -1 || inpIsbn.value === '') {
         let newBook = new Book(inpIsbn.value, inpTitle.value, inpAuthor.value, inpYear.value);
         library.push(newBook);
@@ -23,15 +21,10 @@ addBook.onclick = function () {
     inpYear.value = '';
 }
 
-printBooks.onclick = function (j) {
-    //TODO create ordered list, add all books from libriry
-    // to list as list items. and add list to div with id = result.
-    // if div with id = result not emplty, then replace its child
-    // Hint: see Clock application
-
+printBooks.onclick = function () {
     while (result.firstChild) {
         result.removeChild(result.firstChild);
-      }
+    }
 
     for (let i = 0; i < library.length; i++) {
         const li = document.createElement('li');
@@ -39,13 +32,36 @@ printBooks.onclick = function (j) {
         result.appendChild(li);
     }
 
-    
 
+    let n = maxYearOfPublishing(library);
+    let oldYear = document.getElementById('old');
+    oldYear.appendChild(document.createTextNode(`Oldest edition  -  ${n}`));
+
+    let m = minYearOfPublishing(library);
+    let newYear = document.getElementById('new');
+
+    newYear.appendChild(document.createTextNode(`Latest edition  -  ${m}`));
 }
 
+function maxYearOfPublishing(library) {
+    const maxIndex = library.reduce((res, currentBook, currentIndex, array) => {
+        if (currentBook.year > array[res].year) {
+            return currentIndex;
+        }
+        return res;
+    }, 0);
+    return library[maxIndex];
+}
 
-
-
+function minYearOfPublishing(library) {
+    const minIndex = library.reduce((res, currentBook, currentIndex, array) => {
+        if (currentBook.year < array[res].year) {
+            return currentIndex;
+        }
+        return res;
+    }, 0);
+    return library[minIndex];
+}
 
 function findBook(library, isbn) {
     for (let i = 0; i < library.length; i++) {
